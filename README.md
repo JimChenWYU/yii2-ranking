@@ -11,7 +11,40 @@ $ composer require jimchen/yii2-ranking -vvv
 
 ## Usage
 
-TODO
+### 配置：
+
+```php
+
+[
+	'component' => [
+		'ranking' => [
+			'class' => \jimchen\ranking\RankingManager::class,
+			'name' => 'test',
+			'redis' => 'redis',
+			'fetchNum' => 10,
+			'rankingClasses' => [
+				\jimchen\ranking\ranking\MonthlyRanking::class,
+			],
+		],
+	],
+]
+
+```
+
+### 初始化
+
+```php
+
+use jimchen\ranking\ranking\MonthlyRanking;
+
+Yii::$app->ranking->import(new YourDataSource());
+
+$monthlyRank = Yii::$app->ranking->get(MonthlyRanking::class);
+
+$monthlyRank->rank('john'); // 获取john的排名
+$monthlyRank->score('john'); // 获取john的分数
+$monthlyRank->top(10); // 获取月榜分数最高的前10
+```
 
 ## Contributing
 

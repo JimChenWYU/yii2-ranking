@@ -7,7 +7,6 @@ use Carbon\Carbon;
 /**
  * Trait RankingTrait
  * @mixin Ranking
- * @method int getDefaultExpiredAt()
  */
 trait SetExpiredAtTrait
 {
@@ -34,11 +33,19 @@ trait SetExpiredAtTrait
 	public function getExpiredAt()
 	{
 		if ($this->expiredAt === null) {
-			if (method_exists($this, 'getDefaultExpiredAt')) {
-				return $this->getDefaultExpiredAt();
-			}
+			return $this->getDefaultExpiredAt();
 		}
 
 		return $this->expiredAt;
+	}
+
+	/**
+	 * 获取排行榜默认过期时间
+	 *
+	 * @return int
+	 */
+	public function getDefaultExpiredAt()
+	{
+		return -1;
 	}
 }

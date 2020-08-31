@@ -2,12 +2,12 @@
 
 namespace jimchen\ranking\ranking;
 
-use jimchen\ranking\contracts\IRanking;
+use jimchen\ranking\contracts\IConcreteRanking;
 use jimchen\ranking\Item;
 use yii\base\InvalidArgumentException;
 use yii\redis\Connection;
 
-abstract class Ranking implements IRanking
+abstract class Ranking implements IConcreteRanking
 {
     /**
      * 排行榜名称
@@ -148,26 +148,4 @@ abstract class Ranking implements IRanking
             }
         }
     }
-
-    /**
-     * 获取当前排行榜在 sorted set 中的 key 值
-     *
-     * @return string
-     */
-    abstract public function getRankingKey();
-
-    /**
-     * 获取排行榜的过期时间，仅在大于0的时候有效
-     *
-     * @return integer
-     */
-    abstract public function getExpiredAt();
-
-    /**
-     * 根据需要，判断是否忽略该 $item
-     *
-     * @param Item $item
-     * @return boolean
-     */
-    abstract protected function ignore(Item $item);
 }

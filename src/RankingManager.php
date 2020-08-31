@@ -2,8 +2,8 @@
 
 namespace jimchen\ranking;
 
+use jimchen\ranking\contracts\IConcreteRanking;
 use jimchen\ranking\contracts\IRanking;
-use jimchen\ranking\ranking\Ranking;
 use ReflectionClass;
 use yii\base\Component;
 use yii\di\Instance;
@@ -32,14 +32,9 @@ class RankingManager extends Component implements IRanking
     public $rankingClasses;
 
     /**
-     * @var IDataSource
+     * @var IConcreteRanking[]
      */
-    public $dataSource;
-
-    /**
-     * @var Ranking[]
-     */
-    private $rankingObjects;
+    private $rankingObjects = [];
 
     /**
      * @throws \ReflectionException
@@ -50,21 +45,13 @@ class RankingManager extends Component implements IRanking
         $this->redis = Instance::ensure($this->redis, Connection::class);
 
         foreach ($this->rankingClasses as $rankingClass) {
-            if ($rankingClass instanceof IRanking) {
-                $this->rankingObjects[get_class($rankingClass)] = $rankingClass;
-                continue;
-            }
-            $ref = new ReflectionClass($rankingClass);
-            if ($ref->implementsInterface(IRanking::class)) {
-                $object = new $rankingClass($this->name, $this->redis);
-                $this->rankingObjects[$rankingClass] = $object;
-            }
+            $this->initRankingClass($rankingClass);
         }
     }
 
     /**
      * @param string $key
-     * @return Ranking
+     * @return IConcreteRanking
      */
     public function getRankingOf($key)
     {
@@ -95,14 +82,24 @@ class RankingManager extends Component implements IRanking
         }
     }
 
-    /**
-     * 批量导入当前类所管理的排行类数据
-     */
-    public function import()
+	/**
+	 * @param $class
+	 */
+	public function addRankingClass($class)
+	{
+		$this->initRankingClass($class);
+    }
+
+	/**
+	 * 批量导入当前类所管理的排行类数据
+	 *
+	 * @param IDataSource $dataSource
+	 */
+    public function import(IDataSource $dataSource)
     {
         $lastId = null;
 
-        /** @var Ranking[] $needInitObjects */
+        /** @var IConcreteRanking[] $needInitObjects */
         $needInitObjects = [];
 
         foreach ($this->rankingObjects as $ranking) {
@@ -115,18 +112,38 @@ class RankingManager extends Component implements IRanking
             }
         }
 
-        if ($this->dataSource instanceof IDataSource) {
-            if (!empty($needInitObjects)) {
-                while (($items = $this->dataSource->get($lastId, $this->fetchNum)) != []) {
-                    foreach ($needInitObjects as $ranking) {
-                        $ranking->import($items);
-                    }
+	    if (!empty($needInitObjects)) {
+		    while (($items = $dataSource->get($lastId, $this->fetchNum)) != []) {
+			    foreach ($needInitObjects as $ranking) {
+				    $ranking->import($items);
+			    }
 
-                    if (!empty($items)) {
-                        $lastId = $items[count($items)-1]->getId();
-                    }
-                }
-            }
-        }
+			    if (!empty($items)) {
+				    $lastId = $items[count($items)-1]->getId();
+			    }
+		    }
+	    }
+    }
+
+	private function initRankingClass($class)
+	{
+		if (is_string($class)) {
+			if (!array_key_exists($class, $this->rankingObjects)) {
+				$ref = new ReflectionClass($class);
+				if ($ref->implementsInterface(IConcreteRanking::class)) {
+					$object = new $class($this->name, $this->redis);
+					$this->rankingClasses[] = $class;
+					$this->rankingObjects[$class] = $object;
+				}
+			}
+		}
+		if (is_object($class)) {
+			if (!array_key_exists($className = get_class($class), $this->rankingObjects)) {
+				if ($class instanceof IConcreteRanking) {
+					$this->rankingClasses[] = get_class($class);
+					$this->rankingObjects[get_class($class)] = $class;
+				}
+			}
+		}
     }
 }

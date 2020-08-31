@@ -21,7 +21,7 @@ class DailyRanking extends Ranking
 	 * @param Item $item
 	 * @return bool
 	 */
-	protected function ignore(Item $item)
+	public function ignore(Item $item)
 	{
 		$start = Carbon::now()->startOfMonth()->getTimestamp();
 		$end = Carbon::now()->endOfMonth()->getTimestamp();

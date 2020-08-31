@@ -41,9 +41,8 @@ abstract class RankingTestCase extends TestCase
                 MonthlyRanking::class,
 	            TotalRanking::class,
             ],
-	        'dataSource' => new DummyMonthDataSource(),
         ]);
-        $this->manager->import();
+        $this->manager->import(new DummyMonthDataSource());
     }
 
     protected function tearDown()

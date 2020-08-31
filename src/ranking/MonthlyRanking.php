@@ -21,7 +21,7 @@ class MonthlyRanking extends Ranking
      * @param array $item
      * @return bool
      */
-    protected function ignore(Item $item)
+	public function ignore(Item $item)
     {
         $start = Carbon::now()->startOfMonth()->getTimestamp();
         $end = Carbon::now()->endOfMonth()->getTimestamp();

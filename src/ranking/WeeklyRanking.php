@@ -21,7 +21,7 @@ class WeeklyRanking extends Ranking
 	 * @param Item $item
 	 * @return bool
 	 */
-	protected function ignore(Item $item)
+	public function ignore(Item $item)
 	{
 		$start = Carbon::now()->startOfWeek()->getTimestamp();
 		$end = Carbon::now()->endOfWeek()->getTimestamp();

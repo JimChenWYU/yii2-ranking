@@ -22,7 +22,7 @@ class TotalRanking extends Ranking
 	 * @param Item $item
 	 * @return bool
 	 */
-	protected function ignore(Item $item)
+	public function ignore(Item $item)
 	{
 		return false;
 	}

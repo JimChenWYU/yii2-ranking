@@ -42,7 +42,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Yii2-composer-asset-plugin
-        run: composer global require "fxp/composer-asset-plugin:~1.0"
+      run: composer global require "fxp/composer-asset-plugin:~1.0"
 
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'

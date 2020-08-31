@@ -16,7 +16,7 @@ $ composer require jimchen/yii2-ranking -vvv
 ```php
 
 [
-	'component' => [
+	'components' => [
 		'ranking' => [
 			'class' => \jimchen\ranking\RankingManager::class,
 			'name' => 'test',

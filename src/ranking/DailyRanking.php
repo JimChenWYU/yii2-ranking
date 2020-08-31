@@ -14,7 +14,7 @@ class DailyRanking extends Ranking
 	 */
 	public function getRankingKey()
 	{
-		return sprintf('%s:day:%s', $this->name, date('Ymd'));
+		return sprintf('%s:day:%s', $this->name, Carbon::now()->format('Ymd'));
 	}
 
 	/**

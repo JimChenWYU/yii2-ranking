@@ -14,7 +14,7 @@ class MonthlyRanking extends Ranking
      */
     public function getRankingKey()
     {
-        return sprintf('%s:month:%s', $this->name, date('Ym'));
+        return sprintf('%s:month:%s', $this->name, Carbon::now()->format('Ym'));
     }
 
     /**

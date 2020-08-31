@@ -14,7 +14,7 @@ class WeeklyRanking extends Ranking
 	 */
 	public function getRankingKey()
 	{
-		return sprintf('%s:week:%s', $this->name, date('YW'));
+		return sprintf('%s:week:%s', $this->name, Carbon::now()->format('YW'));
 	}
 
 	/**

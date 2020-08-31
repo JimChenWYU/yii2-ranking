@@ -2,6 +2,7 @@
 
 <p align="center"> The ranks extension for the Yii framework.</p>
 
+![PHP Composer](https://github.com/JimChenWYU/yii2-ranking/workflows/PHP%20Composer/badge.svg)
 
 ## Installing
 

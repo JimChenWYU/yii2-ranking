@@ -41,6 +41,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-
 
+    - name: Composer github token
+      run: composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
     - name: Yii2-composer-asset-plugin
       run: composer global require "fxp/composer-asset-plugin:~1.0"
 
